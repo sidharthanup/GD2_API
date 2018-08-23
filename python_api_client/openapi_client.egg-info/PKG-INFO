@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: openapi-client
+Version: 1.0.0
+Summary: Gluster Management API
+Home-page: UNKNOWN
+Author: UNKNOWN
+Author-email: you@your-company.com
+License: UNKNOWN
+Description:     Gluster Management APIs  # noqa: E501
+            
+Keywords: OpenAPI,OpenAPI-Generator,Gluster Management API
+Platform: UNKNOWN
