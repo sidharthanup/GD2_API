@@ -1,0 +1,608 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Red-Hat93/GD2-Py/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: "http://localhost:24007"
+info:
+  description: Gluster Management APIs
+  version: "1.0.0"
+  title: Gluster Management API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  # Peer Management APIs
+  /peers:
+    get:
+      summary: Get a Peer information
+      parameters:
+            - $ref: '#/components/parameters/peerinfo_edit_del'
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+            
+    post:
+      summary: Add Peer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/peeradd'
+      responses:
+        201:
+          $ref: '#/components/responses/201'
+      
+  /peers/{peerid}:
+    get:
+      summary: Get a Peer information
+      parameters:
+          - $ref: '#/components/parameters/peerinfo_edit_del'
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+    post:
+      parameters:
+         - $ref: '#/components/parameters/peerinfo_edit_del'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/edit'
+        
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+      
+    delete:
+      parameters:
+        - $ref: '#/components/parameters/peerinfo_edit_del'
+      responses:
+          204: 
+            description: 'Peer Delete Response'
+  # Volume Management APIs
+  /volumes:
+    get:
+      responses:
+          200:
+            $ref: '#/components/responses/200vol'
+    post:
+        summary: "Volume Create"
+        requestBody:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/volcreate'
+        responses:
+            201:
+              $ref: '#/components/responses/201vol'
+  /volumes/{volname}/start:
+    post:
+      parameters:
+        - $ref: '#/components/parameters/volstart_stop'
+      responses:
+        200: 
+          $ref: '#/components/responses/200vol'
+        
+  /volumes/{volname}/stop:
+    post:
+      parameters:
+        - $ref: '#/components/parameters/volstart_stop'
+      responses:
+        200:
+          $ref: '#/components/responses/200vol'
+      
+components:
+    parameters:
+      peerinfo_edit_del:
+          in: path
+          name: peerid
+          schema:
+            type: string
+          required: true
+          description: Peer ID
+          example: 4f196836-0d9d-475a-aae2-642bb0eac685
+      
+      volstart_stop:
+          in: path
+          name: volname
+          schema:
+            type: string
+          required: true
+          description: Volume Name
+          example: gv1
+          
+      
+    responses:
+      200:
+          description: List of Peers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/peer'
+                example:
+                  $ref: '#/components/examples/peers'
+      
+      201:
+          description: Peer added response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/peer'
+              
+                  
+      200vol:
+          description: List of Gluster Volumes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/volume'
+                example:
+                  $ref: "#/components/examples/started"
+                
+      201vol:
+          description: Volume info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/volume'
+              example:
+                $ref: "#/components/examples/created"
+
+
+          
+    examples:
+        peers:
+          value:
+            - id: 3203f226-b37f-42da-83fe-0fe8d043d995
+              name: node1.example.com
+              peer-addresses: ["node1.example.com"]
+              client-addresses: ["127.0.0.1:24007","192.168.122.12:24007"]
+              online: true
+              metadata:
+                _zone: 3203f226-b37f-42da-83fe-0fe8d043d995
+            
+            - id: a185f11a-630e-4776-995c-ff2cb84dfa91
+              name: node2.example.com
+              peer-addresses: ["node2.example.com"]
+              client-addresses: ["127.0.0.1:24007","192.168.122.14:24007"]
+              online: true
+              metadata:
+                _zone: a185f11a-630e-4776-995c-ff2cb84dfa91
+            - id: ef27499e-9793-434d-b922-116ff4a315c7
+              name: node3.example.com
+              peer-addresses: ["node3.example.com"]
+              client-addresses: ["127.0.0.1:24007","192.168.122.16:24007"]
+              online: true
+              metadata:
+                _zone: ef27499e-9793-434d-b922-116ff4a315c7
+              
+        peer:
+          value:
+            id: 3203f226-b37f-42da-83fe-0fe8d043d995
+            name: node1.example.com
+            peer-addresses: ["node1.example.com"]
+            client-addresses: ["127.0.0.1:24007","192.168.12.12:24007"]
+            online: true
+            metadata:
+              _zone: 3203f226-b37f-42da-83fe-0fe8d043d995
+        
+        add:
+              summary: Add Peer
+              value:
+                addresses: ["node1.example.com"]
+        edit:
+          summary: Edit Peer
+          value:
+            metadata:
+              - added_date: "2018-07-24"
+              
+        started:
+          value:
+            name: gv1
+            snap-list: []
+            replica-count: 3
+            arbiter-count: 0
+            id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+            state: Started
+            distribute-count: 1
+            type: Replicate
+            options: {}
+            transport: tcp
+            metadata: {}
+            subvols:
+              - name: subvol-0
+                type: Replicate
+                replica-count: 3
+                arbiter-count: 0
+                bricks:
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node1.example.com
+                    peer-id: 9bf0a19f-0680-438c-a213-ba16252c31da
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick1/brick
+                    type: brick
+                    id: b5f243c1-5705-4f19-acf0-fea36570b706
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node2.example.com
+                    peer-id: ea8a2787-4166-43ec-b5b3-e17fad649bae
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick2/brick
+                    type: brick
+                    id: e31ec08d-7855-40ad-a071-160e7aede43e
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node3.example.com
+                    peer-id: fd3d8424-7bea-4a75-a2a8-14f4bd450568
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick3/brick
+                    type: brick
+                    id: 58cd6364-4245-414e-b0de-b27e380a73c9
+                    
+        stopped:
+          value:
+            name: gv1
+            snap-list: []
+            replica-count: 3
+            arbiter-count: 0
+            id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+            state: Stopped
+            distribute-count: 1
+            type: Replicate
+            options: {}
+            transport: tcp
+            metadata: {}
+            subvols:
+              - name: subvol-0
+                type: Replicate
+                replica-count: 3
+                arbiter-count: 0
+                bricks:
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node1.example.com
+                    peer-id: 9bf0a19f-0680-438c-a213-ba16252c31da
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick1/brick
+                    type: brick
+                    id: b5f243c1-5705-4f19-acf0-fea36570b706
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node2.example.com
+                    peer-id: ea8a2787-4166-43ec-b5b3-e17fad649bae
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick2/brick
+                    type: brick
+                    id: e31ec08d-7855-40ad-a071-160e7aede43e
+                  - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                    host: node3.example.com
+                    peer-id: fd3d8424-7bea-4a75-a2a8-14f4bd450568
+                    volume-name: gv1
+                    path: /exports/bricks/gv1/brick3/brick
+                    type: brick
+                    id: 58cd6364-4245-414e-b0de-b27e380a73c9
+                    
+        created:
+            value:
+              name: gv1
+              snap-list: []
+              replica-count: 3
+              arbiter-count: 0
+              id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+              state: Created
+              distribute-count: 1
+              type: Replicate
+              options: {}
+              transport: tcp
+              metadata: {}
+              subvols:
+                - name: subvol-0
+                  type: Replicate
+                  replica-count: 3
+                  arbiter-count: 0
+                  bricks:
+                    - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                      host: node1.example.com
+                      peer-id: 9bf0a19f-0680-438c-a213-ba16252c31da
+                      volume-name: gv1
+                      path: /exports/bricks/gv1/brick1/brick
+                      type: brick
+                      id: b5f243c1-5705-4f19-acf0-fea36570b706
+                    - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                      host: node2.example.com
+                      peer-id: ea8a2787-4166-43ec-b5b3-e17fad649bae
+                      volume-name: gv1
+                      path: /exports/bricks/gv1/brick2/brick
+                      type: brick
+                      id: e31ec08d-7855-40ad-a071-160e7aede43e
+                    - volume-id: 95dd8a65-fc4b-447e-ba5b-8a541df319f2
+                      host: node3.example.com
+                      peer-id: fd3d8424-7bea-4a75-a2a8-14f4bd450568
+                      volume-name: gv1
+                      path: /exports/bricks/gv1/brick3/brick
+                      type: brick
+                      id: 58cd6364-4245-414e-b0de-b27e380a73c9
+                      
+        auto:
+          summary: Create Volume with auto provisioned bricks
+          value:
+            name: gv1
+            size: 1000
+            replica: 3
+        manual:
+          summary: Create Volume with manual provisioned bricks
+          value:
+            name: gv1
+            subvols:
+              - type: replicate
+                replica: 3
+                bricks:
+                  - peerid: 0c5bc279-397a-4535-be32-301c16dbbc69
+                    path: /exports/bricks/gv1/brick1/brick
+                  - peerid: 7aafd270-b9b2-40b2-ba0e-7289f7d025c0
+                    path: /exports/bricks/gv1/brick2/brick
+                  - peerid: 57470e13-2f9c-4404-9179-fb2ba38cc1d8
+                    path: /exports/bricks/gv1/brick3/brick
+                      
+                  
+          
+    schemas:
+        peer:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            peer-addresses:
+              type: array
+              items:
+                type: string
+            client-addresses:
+              type: array
+              items:
+                type: string
+            online:
+              type: boolean
+            pid:
+              type: integer
+            metadata:
+              type: object 
+          example:
+              $ref: '#/components/examples/peer'
+            
+              
+        peeradd:
+              $ref: '#/components/schemas/add' 
+            
+        
+        add:
+              required:
+                - addresses
+              properties:
+                addresses:
+                  type: array
+                  items:
+                    type: string
+                zone:
+                  type: string
+                metadata:
+                  type: object
+              example:
+                $ref: '#/components/examples/add'
+                  
+        edit:
+              properties:
+                zone:
+                  type: string
+                metadata:
+                  type: object
+              example:
+                $ref: '#/components/examples/edit'
+                  
+        volume:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                type:
+                  type: string
+                transport:
+                  type: string
+                distribute-count:
+                  type: integer
+                replica-count:
+                  type: integer
+                arbiter-count:
+                  type: integer
+                options:
+                  type: object
+                state:
+                  type: string
+                subvols:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/subvol'
+                metadata:
+                  type: object
+                snap-list:
+                  type: array
+                  items:
+                    type: string
+              
+        subvol:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                replica-count:
+                  type: integer
+                arbiter-count:
+                  type: integer
+                bricks:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/brick'
+                    
+        brick:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  path:
+                    type: string
+                  volume-id:
+                    type: string
+                  volume-name:
+                    type: string
+                  peer-id:
+                    type: string
+                  host:
+                    type: string
+                  type:
+                    type: string
+                    
+        volcreate:
+              oneOf:
+                - $ref: '#/components/schemas/auto'
+                - $ref: '#/components/schemas/manual'
+                  
+                    
+        auto:
+          type: object
+          description: Create Volume with bricks auto provisioned
+          required: 
+            - size
+          properties:
+            size:
+              description: Volume Size
+              type: integer
+            name:
+              description: Volume Name
+              type: string
+            transport:
+              description: Transport Type
+              type: string
+            force:
+              description: Force
+              type: boolean
+            options:
+              description: Options to be configured
+              type: object
+            advanced:
+              description: Allow setting advanced options
+              type: boolean
+            experimental:
+              description: Allow setting experimental options
+              type: boolean
+            deprecated:
+              description: Allow setting deprecated options
+              type: boolean
+            metadata:
+              description: Set Volume Metadata
+              type: object
+            flags:
+              description: Set Flags
+              type: object
+            distribute:
+              description: Distribute count
+              type: integer
+            replica:
+              description: Replica Count
+              type: integer
+            arbiter:
+              description: Arbiter Count
+              type: integer
+            disperse:
+              description: Disperse count
+              type: integer
+            disperse-redundancy:
+              description: Disperse Redundancy count
+              type: integer
+            disperse-data:
+              description: Disperse Data count
+              type: integer
+            snapshot:
+              description: Enable Snapshot for the Volume
+              type: boolean
+            snapshot-reserve-factor:
+              description: Snapshot reserve factor
+              type: number
+            limit-peers:
+              description: Create Volume only from these peers
+              type: array
+              items:
+                type: string
+            limit-zones:
+              description: Create Volume only from these zones
+              type: array
+              items:
+                type: string
+            exclude-peers:
+              description: Do not create Volume from these peers
+              type: array
+              items:
+                type: string
+            exclude-zones:
+              description: Do not create Volume from these zones
+              type: array
+              items:
+                type: string
+            subvolume-zones-overlap:
+              description: Bricks of different subvolume can be created on same device/peer/zone
+              type: boolean
+          example:
+                    $ref: '#/components/examples/auto'
+        manual:
+          type: object
+          description: Create Volume with bricks manually provisioned
+          properties:
+            name:
+              description: Volume Name
+              type: string
+            transport:
+              description: Transport Type
+              type: string
+            force:
+              description: Force
+              type: boolean
+            subvols:
+              description: List of sub volumes
+              type: array
+              items:
+                $ref: '#/components/schemas/subvol'
+            options:
+              description: Options to be configured
+              type: object
+            advanced:
+              description: Allow setting advanced options
+              type: boolean
+            experimental:
+              description: Allow setting experimental options
+              type: boolean
+            deprecated:
+              description: Allow setting deprecated options
+              type: boolean
+            metadata:
+              description: Set Volume Metadata
+              type: object
+            flags:
+              description: Set Flags
+              type: object
+          example:
+              $ref: '#/components/examples/manual'
