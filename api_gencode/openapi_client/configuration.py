@@ -46,8 +46,8 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
 
     def __init__(self):
         """Constructor"""
-        # Default Base url
-        self.host = "https://virtserver.swaggerhub.com/Red-Hat93/GD2-Py/1.0.0"
+        # Default Base url - Please enter the host ip here for example 'http://10.73.41.266:24007/v1'
+        self.host = "http://"
         # Temp file folder for downloading files
         self.temp_folder_path = None
 
